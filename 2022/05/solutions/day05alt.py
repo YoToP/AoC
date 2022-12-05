@@ -25,8 +25,6 @@ def part1(path):
     with open(path) as f:
         data = f.read()
     grid, instrs = data.split("\n\n")
-    
-
     stacks = ParseGridInput(grid)
 
     instrs = instrs.strip().split("\n")
@@ -42,11 +40,11 @@ def part1(path):
         copyAndRemove = stacks[int(src)-1][sliceStart:sliceEnd]
 
         stacks[int(src)-1] = keep
-        copyAndRemove.reverse()
+        copyAndRemove.reverse() #only difference beetween part 1 and two
         stacks[int(dest)-1].extend(copyAndRemove)
     # calc answer:
     s = ''
-    for x in range(0, 9):
+    for x in range(0, len(stacks)):
         s = s + stacks[x].pop()
     return s
 
@@ -55,8 +53,6 @@ def part2(path):
     with open(path) as f:
         data = f.read()
     grid, instrs = data.split("\n\n")
-    
-
     stacks = ParseGridInput(grid)
 
     instrs = instrs.strip().split("\n")
@@ -75,7 +71,7 @@ def part2(path):
         
     # calc answer:
     s = ''
-    for x in range(0, 9):
+    for x in range(0, len(stacks)):
         s = s + stacks[x].pop()
     return s
 
@@ -83,9 +79,9 @@ def part2(path):
 # Run when this script is not imported by another script(e.g. Unittest)
 if __name__ == '__main__':
     start_time = int(round(time() * 1000))
-    print('part 1:', part1("2022/05/inputs/aoc_2022_day05_large_input.txt"))
+    print('part 1:', part1("2022/05/inputs/input.txt"))
     print("### part 1 run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
-    print('part 2:', part2("2022/05/inputs/aoc_2022_day05_large_input.txt"))
+    print('part 2:', part2("2022/05/inputs/input.txt"))
     print("### total run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
