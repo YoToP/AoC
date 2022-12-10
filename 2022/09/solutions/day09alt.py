@@ -41,7 +41,7 @@ def calcNextKnot(head, tail):
         newTailY += 1
     elif head[1]-tail[1] == -2:  # moved 1 left
         newTailY -= 1
-    return (newTailX, newTailY)
+    return [newTailX, newTailY]
 
 
 def ParseInstruction(line):
@@ -52,24 +52,23 @@ def ParseInstruction(line):
 def part2(path):
     with open(path) as f:
         instructions = list(map(ParseInstruction, f.readlines())) #new stuff
-    posHeadX = 0  # LEFT/RIGHT
-    posHeadY = 0  # UP/DOWN
-    lstKnots = [(0,0) for _ in range(0,9)]#new stuff
+    lstRope = [[0,0] for _ in range(0,10)]#new stuff
     tailVisited0 = set()
     tailVisited8 = set()
 
     for direction, steps in instructions:
+        _y, _x = directions[direction]
         for _ in range(0, int(steps)):
-            _y, _x = directions[direction]
-            posHeadY += _y
-            posHeadX += _x
+            lstRope[0][0] += _x
+            lstRope[0][1] += _y
 
-            lstKnots[0] = calcNextKnot((posHeadX, posHeadY), lstKnots[0])
-            tailVisited0.add((lstKnots[0][0], lstKnots[0][1]))
-
-            for i in range(1, len(lstKnots)):
-                lstKnots[i] = calcNextKnot(lstKnots[i-1], lstKnots[i])
-            tailVisited8.add((lstKnots[8][0], lstKnots[8][1]))
+            for i in range(1, len(lstRope)):
+                if abs(lstRope[i-1][0] - lstRope[i][0]) >1 or abs(lstRope[i-1][1] - lstRope[i][1]) >1:
+                    lstRope[i] = calcNextKnot(lstRope[i-1], lstRope[i])
+                else:
+                    break
+            tailVisited0.add((lstRope[1][0],lstRope[1][1]))
+            tailVisited8.add((lstRope[9][0],lstRope[9][1]))
 
     return (len(tailVisited0), len(tailVisited8))
 
