@@ -18,31 +18,23 @@ def ParseInstruction(line):
 
 def part1(path, maxCycles):
     with open(path) as f:
-        instructions = list(map(ParseInstruction, f.readlines()))  # new stuff
+        instructions = deque(map(ParseInstruction, f.readlines()))  # new stuff
     xr = 1  # X register
     cc = 0  # cyclecount
-    lstss = [0 for _ in range(0, 6)]  # signal strength list
-    for cycleCost, addition in instructions:
-        cc += cycleCost
-        if cc >= 180 and lstss[4] == 0:
-            lstss[4] = 180 * xr
-        elif cc >= 140 and lstss[3] == 0:
-            lstss[3] = 140 * xr
-        elif cc >= 100 and lstss[2] == 0:
-            lstss[2] = 100 * xr
-        elif cc >= 60 and lstss[1] == 0:
-            lstss[1] = 60 * xr
-        elif cc >= 20 and lstss[0] == 0:
-            lstss[0] = 20 * xr
-        elif cc >= maxCycles:
-            lstss[5] = 220 * xr
-            break
-        xr += addition
-
-    totalSignal = 0
-    for ss in lstss:
-        totalSignal += ss
-    return totalSignal
+    lastcccomplete = 0
+    nextInstruction = instructions.popleft()
+    ss = 0  # signal strength list
+    while True:
+        cc += 1
+        if (cc+20) % 40 == 0:
+            ss += cc*xr
+        if nextInstruction[0]+lastcccomplete == cc:
+            lastcccomplete = cc
+            xr += nextInstruction[1]
+            if len(instructions) == 0:
+                break  # no more instructions, so stop the loop
+            nextInstruction = instructions.popleft()
+    return ss
 
 
 def part2(path):
