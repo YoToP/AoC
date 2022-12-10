@@ -5,25 +5,27 @@ import java.util.List;
 
 public class day09 {
     public static void part1and2() {
-        Point posHead = new Point(0, 0);
-        Point[] lstKnots = new Point[9];
-        for(int i = 0;i<lstKnots.length;i++)
-            lstKnots[i] = new Point(0, 0); 
+        Point[] lstRope = new Point[10];
+        for(int i = 0;i<lstRope.length;i++)
+            lstRope[i] = new Point(0, 0); 
         HashSet<Point> tailVisited0 = new HashSet<Point>();
         HashSet<Point> tailVisited8 = new HashSet<Point>();
-        Instructions[] instructions = getDay09Input();
-        for (Instructions instruction : instructions) {
+        Instruction[] instructions = getDay09Input();
+        for (Instruction instruction : instructions) {
             for (int i = 0; i < instruction.steps; i++) {
-                posHead.x += instruction.offset.x;
-                posHead.y += instruction.offset.y;
+                lstRope[0].x += instruction.offset.x;
+                lstRope[0].y += instruction.offset.y;
 
-                lstKnots[0] = calcNextKnot(posHead, lstKnots[0]);
-                tailVisited0.add(lstKnots[0].Copy());
-
-                for (int j = 1; j < lstKnots.length; j++) {
-                    lstKnots[j] = calcNextKnot(lstKnots[j - 1], lstKnots[j]);
+                for (int j = 1; j < lstRope.length; j++) {
+                    if (Math.abs(lstRope[j-1].x - lstRope[j].x) >1 || Math.abs(lstRope[j-1].y - lstRope[j].y) >1){
+                        lstRope[j] = calcNextKnot(lstRope[j - 1], lstRope[j]);
+                    }else{
+                        break;
+                    }
+                    
                 }
-                tailVisited8.add(lstKnots[8].Copy());
+                tailVisited0.add(lstRope[1].Copy());
+                tailVisited8.add(lstRope[9].Copy());
             }
         }
         System.out.println("Part1: " + tailVisited0.size() + "\nPart2: " + tailVisited8.size());
@@ -67,10 +69,10 @@ public class day09 {
     }
 
     // *Create a list of offsets on the Head node */
-    private static Instructions[] getDay09Input() {
+    private static Instruction[] getDay09Input() {
         try {
             List<String> lines = Files.readAllLines(Path.of("2022", "09", "inputs", "input.txt"));
-            Instructions[] pointList = new Instructions[lines.size()];
+            Instruction[] pointList = new Instruction[lines.size()];
             int i = 0;
 
             for (String line : lines) {
@@ -78,10 +80,10 @@ public class day09 {
                 Character c = _lineData[0].toCharArray()[0];
                 int steps = Integer.parseInt(_lineData[1]);
                 switch (c) {
-                    case 'R' -> pointList[i] = new Instructions(new Point(1, 0), steps);
-                    case 'U' -> pointList[i] = new Instructions(new Point(0, 1), steps);
-                    case 'L' -> pointList[i] = new Instructions(new Point(-1, 0), steps);
-                    case 'D' -> pointList[i] = new Instructions(new Point(0, -1), steps);
+                    case 'R' -> pointList[i] = new Instruction(new Point(1, 0), steps);
+                    case 'U' -> pointList[i] = new Instruction(new Point(0, 1), steps);
+                    case 'L' -> pointList[i] = new Instruction(new Point(-1, 0), steps);
+                    case 'D' -> pointList[i] = new Instruction(new Point(0, -1), steps);
                     default -> throw new IllegalArgumentException("Invalid move");
                 }
                 i++;
@@ -104,11 +106,11 @@ public class day09 {
         System.out.println("Elapsed time: " + (timeB - timeA) / 1000000+" ms");
     }
 
-    public static class Instructions {
+    public static class Instruction {
         public Point offset;
         public int steps;
 
-        public Instructions(Point offset, int steps) {
+        public Instruction(Point offset, int steps) {
             this.offset = offset;
             this.steps = steps;
         }
