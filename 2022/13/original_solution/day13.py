@@ -3,13 +3,31 @@ from time import time
 day13
 '''
 def ListCompare(leftList,rightList):
-    if len(rightList) < len(leftList):
-        return False
-    elif len(rightList) > len(leftList):
+        for i in range(0,len(leftList)):
+            if i == len(rightList):
+                return False
+            isLeftInt = isinstance(leftList[i], int)
+            isRightInt = isinstance(rightList[i], int)
+            if isLeftInt and isRightInt:
+                if leftList[i] > rightList[i]:
+                    return False
+                elif leftList[i] < rightList[i]:
+                    return True
+            else:
+                if isLeftInt:
+                    leftList[i] = [leftList[i]]
+                if isRightInt:
+                    rightList[i] = [rightList[i]]
+                lc = ListCompare(leftList[i], rightList[i])
+                if lc == None:
+                    pass
+                elif lc:
+                    return True
+                else:
+                    return False
+        if len(leftList) == len(rightList):
+            return None        
         return True
-    else:
-        len(leftList)
-    return False
 
 def IntCompare(left, right):
     return left<right
@@ -31,8 +49,13 @@ def getList(string):
                         closingBracketsNeeded -=1
                 elif string[j] == '[':
                     closingBracketsNeeded +=1
-        elif string[i] >= '1' and string[i] <= '9':
-            _list.append(int(string[i]))
+        elif string[i] >= '0' and string[i] <= '9':
+            _s = string[i]
+            if i+1 < len(string):
+                if string[i+1] >= '0' and string[i+1] <= '9':
+                    _s += string[i+1]
+                    i += 1
+            _list.append(int(_s))
         i +=1
     return _list
 
@@ -63,7 +86,7 @@ def part2(path):
 
 if __name__ == '__main__':
     start_time = int(round(time() * 1000))
-    print('part 1:', part1("2022/13/inputs/example.txt"))
+    print('part 1:', part1("2022/13/inputs/input.txt"))
     print('part 2:', part2("2022/13/inputs/input.txt"))
     print("### total run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
