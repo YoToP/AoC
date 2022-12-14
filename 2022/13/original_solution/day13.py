@@ -1,4 +1,5 @@
 from time import time
+from collections import deque
 ''' 
 day13
 '''
@@ -79,9 +80,25 @@ def part1(path):
 
 
 def part2(path):
-    
+    with open(path) as f:
+        lines = f.readlines()
+    before2 = 1
+    nr2 = [[2]]
+    before6 = 1
+    nr6 = [[6]]
 
-    return 0
+    pairCounter = 0
+    CorrectPairSum = 0
+    for line in lines:
+        line = line.strip()
+        if len(line)>0:
+            linelist = getList(line[1:len(line)-1])
+            if ListCompare(linelist,nr2):
+                before2 += 1
+            elif ListCompare(linelist,nr6):
+                before6 += 1
+
+    return before2 * (before6+before2)
 
 
 if __name__ == '__main__':
