@@ -1,55 +1,58 @@
 from time import time
-from collections import deque
 ''' 
 day13
 '''
-def ListCompare(leftList,rightList):
-        for i in range(0,len(leftList)):
-            if i == len(rightList):
+
+
+def ListCompare(leftList, rightList):
+    for i in range(0, len(leftList)):
+        if i == len(rightList):
+            return False
+        isLeftInt = isinstance(leftList[i], int)
+        isRightInt = isinstance(rightList[i], int)
+        if isLeftInt and isRightInt:
+            if leftList[i] > rightList[i]:
                 return False
-            isLeftInt = isinstance(leftList[i], int)
-            isRightInt = isinstance(rightList[i], int)
-            if isLeftInt and isRightInt:
-                if leftList[i] > rightList[i]:
-                    return False
-                elif leftList[i] < rightList[i]:
-                    return True
+            elif leftList[i] < rightList[i]:
+                return True
+        else:
+            if isLeftInt:
+                leftList[i] = [leftList[i]]
+            if isRightInt:
+                rightList[i] = [rightList[i]]
+            lc = ListCompare(leftList[i], rightList[i])
+            if lc == None:
+                pass
+            elif lc:
+                return True
             else:
-                if isLeftInt:
-                    leftList[i] = [leftList[i]]
-                if isRightInt:
-                    rightList[i] = [rightList[i]]
-                lc = ListCompare(leftList[i], rightList[i])
-                if lc == None:
-                    pass
-                elif lc:
-                    return True
-                else:
-                    return False
-        if len(leftList) == len(rightList):
-            return None        
-        return True
+                return False
+    if len(leftList) == len(rightList):
+        return None
+    return True
+
 
 def IntCompare(left, right):
-    return left<right
+    return left < right
+
 
 def getList(string):
     _list = []
     i = 0
     while i < len(string):
-        if string[i] =='[':
-            #new list starts, find closing bracket.
+        if string[i] == '[':
+            # new list starts, find closing bracket.
             closingBracketsNeeded = 0
-            for j in range(i+1,len(string)):
+            for j in range(i+1, len(string)):
                 if string[j] == ']':
                     if closingBracketsNeeded == 0:
                         _list.append(getList(string[i+1:j]))
                         i = j
                         break
                     else:
-                        closingBracketsNeeded -=1
+                        closingBracketsNeeded -= 1
                 elif string[j] == '[':
-                    closingBracketsNeeded +=1
+                    closingBracketsNeeded += 1
         elif string[i] >= '0' and string[i] <= '9':
             _s = string[i]
             if i+1 < len(string):
@@ -57,23 +60,24 @@ def getList(string):
                     _s += string[i+1]
                     i += 1
             _list.append(int(_s))
-        i +=1
+        i += 1
     return _list
+
 
 def part1(path):
     with open(path) as f:
         lines = f.read()
-    pairs= lines.split('\n\n')
-    
+    pairs = lines.split('\n\n')
+
     pairCounter = 0
     CorrectPairSum = 0
     for pair in pairs:
         pairCounter += 1
-        pleft,pright = pair.split('\n')
+        pleft, pright = pair.split('\n')
         leftlist = getList(pleft[1:len(pleft)-1])
         rightlist = getList(pright[1:len(pright)-1])
-        
-        if ListCompare(leftlist,rightlist):
+
+        if ListCompare(leftlist, rightlist):
             CorrectPairSum += pairCounter
         pass
     return CorrectPairSum
@@ -87,17 +91,14 @@ def part2(path):
     before6 = 1
     nr6 = [[6]]
 
-    pairCounter = 0
-    CorrectPairSum = 0
     for line in lines:
         line = line.strip()
-        if len(line)>0:
+        if len(line) > 0:
             linelist = getList(line[1:len(line)-1])
-            if ListCompare(linelist,nr2):
+            if ListCompare(linelist, nr2):
                 before2 += 1
-            elif ListCompare(linelist,nr6):
+            elif ListCompare(linelist, nr6):
                 before6 += 1
-
     return before2 * (before6+before2)
 
 
