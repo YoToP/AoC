@@ -1,7 +1,8 @@
 from time import time
-from collections import deque
+from collections import deque,defaultdict
 ''' 
 day16
+test
 '''
 
 class Node:
@@ -16,31 +17,40 @@ class Node:
     def addNode(self,node):
         self.nodes.append(node)
 
-def alreadyVisited(pList,currentValve,nextValve):
-    maxRange = len(pList)
-    for i in range(0,maxRange):
-        if pList[i] == currentValve:
-            if i+1 < maxRange:
-                if pList[i+1] == nextValve:
-                    return True
-    return False
+
+def ShortestPathByBFS(g, source):
+        INFINITE = int(len(g) * 2)
+        UNDEFINED = -1
+        distances = defaultdict(lambda:INFINITE)
+        predecessors = defaultdict(lambda:UNDEFINED)
+
+        distances[source] = 0
+
+        visited = defaultdict(lambda:False)
+        visited[source] = True
+
+        queue = deque()
+        queue.append(source)
+
+        while len(queue) > 0:
+            u = queue.popleft()
+
+            for v in g[u][1]:
+                if visited[v] != True:
+                    visited[v] = True
+                    distances[v] = distances[u] + 1
+                    predecessors[v] = u
+                    queue.append(v)
+
+        return distances
 
 
-    def checkPosibilitiesNG(valveList,minutes,currentValve):
-        if minutes < 2:
-            for valve in valveList[currentValve][1]:
-                if not alreadyVisited(allPosibillities, currentValve, valve):
-                    _list = checkPosibilities(valveList,minutes+1,valve)
-                    for _plist in _list:
-                        _temp = [currentValve]
-                        _temp.extend(_plist)
-                        allPosibillities.append(_temp)
-        else:
-            for _plist in allPosibillities:
-                _plist.append([currentValve])
 
 
-def checkPosibilities(valveList,history,minutes,currentValve):
+
+
+
+def checkPosibilities(valveList,minutes,currentValve):
     history.append(currentValve)
     pList = []
     if minutes < 30:
@@ -61,6 +71,7 @@ def part1(path):
     with open(path) as f:
         lines = f.readlines()
     valveList = {}
+    valveListWithFlow = []
     startingValve = None
     for line in lines:
         valveandflow,leadsTo = line.strip().split("; ")
@@ -68,13 +79,29 @@ def part1(path):
         if startingValve == None:
             startingValve = valve
         flow = int(valveandflow.split("=")[1])
+        if flow > 0:
+            valveListWithFlow.append((valve,flow))
         leadsTo = leadsTo.split(" ")
         leadsTo = leadsTo[4:len(leadsTo)]
         for i in range(0,len(leadsTo)):
             leadsTo[i] = leadsTo[i][0:2]
         valveList[valve] = (flow,leadsTo)
 
-    allPosibillities = checkPosibilities(valveList,[],1,startingValve)
+    def CalcFlow(valveListWithFlow,currentflow,minutes,currentVale):
+        highestFlow = currentflow
+        if minutes < 2:
+            Distances = ShortestPathByBFS(valveList,currentVale)
+            for i in range(0,len(valveListWithFlow)):
+                valve,flow = valveListWithFlow[i]
+                _tempValveList = valveListWithFlow.copy()
+                _tempValveList.remove((valve,flow))
+                _tempDist = CalcFlow(_tempValveList, currentflow*Distances[valve], minutes+Distances[valve], valve)
+                if _tempDist > highestFlow:
+                    highestFlow = _tempDist
+
+        return highestFlow
+
+    highestValue = CalcFlow(valveListWithFlow.copy(),0,0,startingValve)
 
     return 0
 
@@ -92,3 +119,4 @@ if __name__ == '__main__':
     #print('part 2:', part2("2022/16/inputs/input.txt"))
     print("### total run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
+
