@@ -10,9 +10,9 @@ def readZST(path):
     return dctx.decompress(data,max_output_size=2**31)
 
 def part1and2(path,distinctChars):
-    #with open(path) as f:
-    #    data = f.read()
-    data = readZST(path)
+    with open(path) as f:
+        data = f.read()
+    #data = readZST(path)
     charRow = deque()
     i = 0
     for char in data:
@@ -49,48 +49,35 @@ def part1and2Alt(path,distinctChars):
     return 0
 
 def part1and2copy(path,distinctChars):
-    #with open(path) as f:
-    #    data = f.read()
-    data = readZST(path)
-    charRow = deque()
-
+    with open(path) as f:
+        data = f.read()
+    #data = readZST(path)
+    print(len(data))
     lstRange = []
-    for i in range(1,14):
+    for i in range(0,distinctChars):
         lstRange.append(i)
     lstRange.reverse()
     w = 0
-    while True:
+    run = True
+    while run:
+        run = False
         seen = 0
         for i in lstRange:
-            mask = 1 << data[w+i] - 97 #'a'
-            if seen and mask == mask:
-                w+=i
-                break
-            seen |= mask
-            
-
-
-    for char in data:
-        if char in charRow:
-            removedchar = charRow.popleft()
-
-            while removedchar != char:
-                removedchar = charRow.popleft()
-            charRow.append(char)
-            i +=1
-        else:
-            charRow.append(char)
-            i +=1
-            if len(charRow) == distinctChars:
-                return i
-    return 0
+            xshift = ord(data[w+i]) - 97 #'a'
+            mask = 1 << xshift
+            if seen & mask == mask:
+                w+=i+1
+                run = True
+            else:
+                seen |= mask
+    return w+distinctChars
 
 if __name__ == '__main__':
     start_time = int(round(time() * 1000))
     PerInputTime = start_time
-    path = "2022/06/inputs/aoc22d6l.txt.zst"
+    path = "2022/06/inputs/debug.txt"
     print('part 1:', part1and2copy(path,4))
-    print('part 2:', part1and2Alt(path,14))
+    print('part 2:', part1and2copy(path,14))
     print(f"### input: {path} run time is {(int(round(time() * 1000)) - PerInputTime)} miliseconds")
     
     PerInputTime = int(round(time() * 1000))
