@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 
 public class Solution {
     static public int MAX_AGE_DAYS = 8;
@@ -26,21 +25,13 @@ public class Solution {
         System.out.println("Elapsed time: " + (timeB - timeA)/1000);
     }
 
-    public static List<String> getInput() {
-        try {
-            return Files.readAllLines(Path.of("6/input.txt"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 
     private static long[] getInput2() {
         long[] result = new long[9];
 
         try {
-            Arrays.stream(Files.readAllLines(Path.of("6/input.txt")).get(0).split(","))
+            Arrays.stream(Files.readAllLines(Path.of("2021","06","inputs","input.txt")).get(0).split(","))
                     .mapToInt(Integer::parseInt).forEach(val -> result[val]++);
         } catch (IOException e) {
             // TODO Auto-generated catch block
