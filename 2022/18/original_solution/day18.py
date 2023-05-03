@@ -51,7 +51,7 @@ def addMissingBlock(cubeList):
     return returnList
 
 def isAdjecentValue(xyz,value):
-    z,y,z = xyz
+    x,y,z = xyz
     global matrix
     if matrix[x-1][y][z] == value:
         return True
@@ -67,6 +67,11 @@ def isAdjecentValue(xyz,value):
         return True
     return False
 
+def setMinusOneIfZero(xyz):
+    global matrix
+    x,y,z = xyz
+    if matrix[x][y][z] != 1:
+        matrix[x][y][z] = -1
 
 
 def part1(path):
@@ -109,141 +114,52 @@ def part2(path):
     
     for j in range(yHigh):
         for k in range(zHigh):
-            if matrix[0][j][k] != 1:
-                matrix[0][j][k] = -1
-            if matrix[xHigh-1][j][k] != 1:
-                matrix[xHigh-1][j][k] = -1
+            setMinusOneIfZero([0,j,k])
+            setMinusOneIfZero([xHigh-1,j,k])
     for i in range(xHigh):
         for k in range(zHigh):
-            if matrix[i][0][k] != 1:
-                matrix[i][0][k] = -1
-            if matrix[i][yHigh-1][k] != 1:
-                matrix[i][yHigh-1][k] = -1
+            setMinusOneIfZero([i,0,k])
+            setMinusOneIfZero([i,yHigh-1,k])
     for i in range(xHigh):
         for j in range(yHigh):
-            if matrix[i][j][0] != 1:
-                matrix[i][j][0] = -1
-            if matrix[i][j][zHigh-1] != 1:
-                matrix[i][j][zHigh-1] = -1
+            setMinusOneIfZero([i,j,0])
+            setMinusOneIfZero([i,j,zHigh-1])
+
     start = 1
     end = xHigh-2
+    counter = 0
+
+    for i in range(1,xHigh-1):
+        for j in range(1,yHigh-1):
+            for k in range(1,zHigh-1):
+                counter += 1
+                if isAdjecentValue([i,j,k],-1):
+                    setMinusOneIfZero([i,j,k])
+    '''
     while start < end:
         for j in range(start,end+1):
             for k in range(start,end+1):
-                if matrix[start-1][j][k] == -1:
-                    if matrix[start][j][k] != 1:
-                        matrix[start][j][k] = -1
-                elif matrix[start+1][j][k] == -1:
-                    if matrix[start][j][k] != 1:
-                        matrix[start][j][k] = -1
-                elif matrix[start][j-1][k] == -1:
-                    if matrix[start][j][k] != 1:
-                        matrix[start][j][k] = -1
-                elif matrix[start][j+1][k] == -1:
-                    if matrix[start][j][k] != 1:
-                        matrix[start][j][k] = -1
-                elif matrix[start][j][k-1] == -1:
-                    if matrix[start][j][k] != 1:
-                        matrix[start][j][k] = -1
-                elif matrix[start][j][k+1] == -1:
-                    if matrix[start][j][k] != 1:
-                        matrix[start][j][k] = -1
-                if matrix[end-1][j][k] == -1:
-                    if matrix[end][j][k] != 1:
-                        matrix[end][j][k] = -1
-                elif matrix[end+1][j][k] == -1:
-                    if matrix[end][j][k] != 1:
-                        matrix[end][j][k] = -1
-                elif matrix[end][j-1][k] == -1:
-                    if matrix[end][j][k] != 1:
-                        matrix[end][j][k] = -1
-                elif matrix[end][j+1][k] == -1:
-                    if matrix[end][j][k] != 1:
-                        matrix[end][j][k] = -1
-                elif matrix[end][j][k-1] == -1:
-                    if matrix[end][j][k] != 1:
-                        matrix[end][j][k] = -1
-                elif matrix[end][j][k+1] == -1:
-                    if matrix[end][j][k] != 1:
-                        matrix[end][j][k] = -1
+                counter += 1
+                if isAdjecentValue([start,j,k],-1):
+                    setMinusOneIfZero([start,j,k])
+                if isAdjecentValue([end,j,k],-1):
+                    setMinusOneIfZero([end,j,k])
         for i in range(start,end+1):
             for k in range(start,end+1):
-                if matrix[i-1][start][k] == -1:
-                    if matrix[i][start][k] != 1:
-                        matrix[i][start][k] = -1
-                elif matrix[i+1][start][k] == -1:
-                    if matrix[i][start][k] != 1:
-                        matrix[i][start][k] = -1
-                elif matrix[i][start+1][k] == -1:
-                    if matrix[i][start][k] != 1:
-                        matrix[i][start][k] = -1
-                elif matrix[i][start-1][k] == -1:
-                    if matrix[i][start][k] != 1:
-                        matrix[i][start][k] = -1
-                elif matrix[i][start][k+1] == -1:
-                    if matrix[i][start][k] != 1:
-                        matrix[i][start][k] = -1
-                elif matrix[i][start][k-1] == -1:
-                    if matrix[i][start][k] != 1:
-                        matrix[i][start][k] = -1
-                if matrix[i-1][end][k] == -1:
-                    if matrix[i][end][k] != 1:
-                        matrix[i][end][k] = -1
-                elif matrix[i+1][end][k] == -1:
-                    if matrix[i][end][k] != 1:
-                        matrix[i][end][k] = -1
-                elif matrix[i][end+1][k] == -1:
-                    if matrix[i][end][k] != 1:
-                        matrix[i][end][k] = -1
-                elif matrix[i][end-1][k] == -1:
-                    if matrix[i][end][k] != 1:
-                        matrix[i][end][k] = -1
-                elif matrix[i][end][k+1] == -1:
-                    if matrix[i][end][k] != 1:
-                        matrix[i][end][k] = -1
-                elif matrix[i][end][k-1] == -1:
-                    if matrix[i][end][k] != 1:
-                        matrix[i][end][k] = -1
+                counter += 1
+                if isAdjecentValue([i,start,k],-1):
+                    setMinusOneIfZero([i,start,k])
+                if isAdjecentValue([i,end,k],-1):
+                    setMinusOneIfZero([i,end,k])
         for i in range(start,end+1):
             for j in range(start,end+1):
-                if matrix[i-1][j][start] == -1:
-                    if matrix[i][j][start] != 1:
-                        matrix[i][j][start] = -1
-                elif matrix[i+1][j][start] == -1:
-                    if matrix[i][j][start] != 1:
-                        matrix[i][j][start] = -1
-                elif matrix[i][j-1][start] == -1:
-                    if matrix[i][j][start] != 1:
-                        matrix[i][j][start] = -1
-                elif matrix[i][j+1][start] == -1:
-                    if matrix[i][j][start] != 1:
-                        matrix[i][j][start] = -1
-                elif matrix[i][j][start-1] == -1:
-                    if matrix[i][j][start] != 1:
-                        matrix[i][j][start] = -1
-                elif matrix[i][j][start+1] == -1:
-                    if matrix[i][j][start] != 1:
-                        matrix[i][j][start] = -1
-                if matrix[i-1][j][end] == -1:
-                    if matrix[i][j][end] != 1:
-                        matrix[i][j][end] = -1
-                elif matrix[i+1][j][end] == -1:
-                    if matrix[i][j][end] != 1:
-                        matrix[i][j][end] = -1
-                elif matrix[i][j-1][end] == -1:
-                    if matrix[i][j][end] != 1:
-                        matrix[i][j][end] = -1
-                elif matrix[i][j+1][end] == -1:
-                    if matrix[i][j][end] != 1:
-                        matrix[i][j][end] = -1
-                elif matrix[i][j][end-1] == -1:
-                    if matrix[i][j][end] != 1:
-                        matrix[i][j][end] = -1
-                elif matrix[i][j][end+1] == -1:
-                    if matrix[i][j][end] != 1:
-                        matrix[i][j][end] = -1
+                counter += 1
+                if isAdjecentValue([i,j,start],-1):
+                    setMinusOneIfZero([i,j,start])
+                if isAdjecentValue([i,j,end],-1):
+                    setMinusOneIfZero([i,j,end])
         start += 1
-        end -= 1
+        end -= 1'''
     extra = []
     for i in range(xHigh):
         for j in range(yHigh):
@@ -254,8 +170,7 @@ def part2(path):
                 if matrix[i][j][k] == 1:
                     if [i,j,k] not in extra:
                         extra.append([i,j,k])        
-    extra.extend(addMissingBlock(extra))
-    extra.extend(addMissingBlock(extra))
+
     return calcSurface(extra)
 
 
