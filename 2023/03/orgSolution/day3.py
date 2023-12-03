@@ -1,5 +1,5 @@
 def p1():
-    with open("day3/inputs/input.txt") as f:
+    with open("2023/03/inputs/input.txt") as f:
         lines = f.readlines()
     score = 0
 
@@ -58,11 +58,11 @@ def p1():
 
 
 def p2(): 
-    with open("day3/inputs/input.txt") as f:
+    with open("2023/03/inputs/input.txt") as f:
         _lines = f.readlines()
     matrix = []
     for line in _lines:
-        matrix.append(list(line))
+        matrix.append(list(line.strip()))
     score = 0
     
     def findAdjecent(x,y):
@@ -76,10 +76,13 @@ def p2():
             #collect whole sequence
             _seq = ''
             _endJ = _startJ
-            while matrix[_i][_endJ].isdigit():
-                _seq += matrix[_i][_endJ]
-                matrix[_i][_endJ] = '.'
-                _endJ += 1
+            if _endJ < len(matrix[_i]):
+                while matrix[_i][_endJ].isdigit():
+                    _seq += matrix[_i][_endJ]
+                    matrix[_i][_endJ] = '.'
+                    _endJ += 1
+                    if _endJ == len(matrix[_i]):
+                        break
             return _seq
 
         seq1 = ''
@@ -100,16 +103,11 @@ def p2():
 
     for i in range(0,len(matrix)):
         for j in range(0,len(matrix[0])-1):
-            if matrix[i][j] == '\n':
-                pass
-            else:
-                #Current line
-                if matrix[i][j] == '*': #
-                    score += findAdjecent(i,j)
+            #Current line
+            if matrix[i][j] == '*': #
+                score += findAdjecent(i,j)
     return score
 
-
-# Run when this script is not imported by another script(e.g. Unittest)
 if __name__ == '__main__':
     print(f"part 1: {p1()}")
     print(f"part 2: {p2()}")
