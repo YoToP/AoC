@@ -1,4 +1,4 @@
-with open("day1/inputs/input.txt") as f:
+with open("2023/01/inputs/input.txt") as f:
     lines = f.readlines()
 total = 0
 for line in lines:

@@ -1,5 +1,5 @@
 def p1():
-    with open("day2/inputs/input.txt") as f:
+    with open("2023/02/inputs/input.txt") as f:
         lines = f.readlines()
     score = 0
     for line in lines:
@@ -33,7 +33,7 @@ def p1():
 
 
 def p2():
-    with open("day2/inputs/input.txt") as f:
+    with open("2023/02/inputs/input.txt") as f:
         lines = f.readlines()
     score = 0
     for line in lines:
