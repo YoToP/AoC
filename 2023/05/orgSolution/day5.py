@@ -1,4 +1,4 @@
-
+from time import time
 def p1():
     with open("2023/05/inputs/input.txt") as f:
         blocks = f.read().split('\n\n')
@@ -99,5 +99,11 @@ def p2():
     return lowest
 
 if __name__ == '__main__':
-    print(f"part 1: {p1()}")
-    print(f"part 2: {p2()}")
+    start_time = int(round(time() * 1000))
+    print('part 1:', p1())
+    print("### p1 run time is %s miliseconds" %
+          (int(round(time() * 1000)) - start_time))
+    start_time = int(round(time() * 1000))
+    print('part 2:', p2())
+    print("### p2 run time is %s miliseconds" %
+          (int(round(time() * 1000)) - start_time))
