@@ -1,133 +1,103 @@
-from collections import defaultdict
+
 def p1():
-    with open("2023/05/inputs/example.txt") as f:
+    with open("2023/05/inputs/input.txt") as f:
         blocks = f.read().split('\n\n')
-    
     seeds = blocks[0].split(": ")[1].split(' ')
-    seedToSoilDict = defaultdict(int)
+    lowest = 1e10
+    #voor alle seeds:
     for seed in seeds:
-        seedToSoilDict[int(seed)]
-    lines = blocks[1].split('\n')
-    for line in lines: #seed-to-soil map:
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                seedToSoilDict[i] = dest+i
-
-    #soil-to-fertilizer map:
-    soilToFertDict = defaultdict(int)
-    lines = blocks[2].split('\n')
-    for line in lines: 
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                soilToFertDict[i] = dest+i
-    #fertilizer-to-water map:
-    fertToWaterDict = defaultdict(int)
-    lines = blocks[3].split('\n')
-    for line in lines: 
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                fertToWaterDict[i] = dest+i
-
-#water-to-light map:
-    waterToLightDict = defaultdict(int)
-    lines = blocks[4].split('\n')
-    for line in lines: 
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                waterToLightDict[i] = dest+i
-
-#light-to-temperature map:
-    lightToTempDict = defaultdict(int)
-    lines = blocks[5].split('\n')
-    for line in lines: 
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                lightToTempDict[i] = dest+i
-#temperature-to-humidity map:
-    tempToHumidDict = defaultdict(int)
-    lines = blocks[6].split('\n')
-    for line in lines: 
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                tempToHumidDict[i] = dest+i
-#humidity-to-location map:
-    humidToLocDict = defaultdict(int)
-    lines = blocks[7].split('\n')
-    for line in lines: 
-        numbers = line.split(' ')
-        if len(numbers) == 3:
-            #dest, Source, length
-            src = int(numbers[1])
-            dest = int(numbers[0])
-            length = int(numbers[2])
-            for i in range(src,src+length+1):
-                humidToLocDict[i] = dest+i
-    score = 0
-    return score
+        checkValue = int(seed)
+        #check of deze in de lijst staat. anders is het nummer hetzelfde
+        blockNr = 1
+        while blockNr < 8:
+            lines = blocks[blockNr].split('\n')
+            for line in lines: 
+                numbers = line.split(' ')
+                if len(numbers) == 3:
+                    #dest, Source, length
+                    dest = int(numbers[0])
+                    src = int(numbers[1])
+                    length = int(numbers[2])
+                    if checkValue in range(src,src+length+1):
+                        checkValue = checkValue + (dest-src)
+                        break
+            blockNr += 1
+        if checkValue < lowest:
+            lowest = checkValue
+    return lowest
 
 
 def p2(): 
-    with open("2023/04/inputs/input.txt") as f:
-        lines = f.readlines()
-    cardCounterDict = defaultdict(lambda: 1)
-    cardnr = 0
-    for line in lines:
-        _, numbers = line.strip().split(":")
-        cardnr += 1
-        winning, mynumbers = numbers.split(" | ")
-        winset = set()
-        for winNr in winning.split(" "):
-            if winNr.isdigit():
-                winset.add(int(winNr))
-        amountWinningNumbers = len(winset)
-        amountPlayNumbers = 0
-        for winNr in mynumbers.split(" "):
-            if winNr.isdigit():
-                winset.add(int(winNr))
-                amountPlayNumbers += 1
+    with open("2023/05/inputs/input.txt") as f:
+        blocks = f.read().split('\n\n')
+    seedRangeLineElements = blocks[0].split(": ")[1].split(' ')
+    i = 0
+    seedRanges = []
+    while i < len(seedRangeLineElements):
+        start = int(seedRangeLineElements[i])
+        end = start + int(seedRangeLineElements[i+1])
+        seedRanges.append((start,end))
+        i+=2
+    lowest = 1e10
 
-        if len(winset) < amountWinningNumbers+amountPlayNumbers: #only calc when at least 1 number is a winning number
-            amountWinning = amountWinningNumbers+amountPlayNumbers-len(winset)
-            for i in range(1,amountWinning+1):
-                cardCounterDict[i+cardnr] += 1 * cardCounterDict[cardnr]
-        else:
-            cardCounterDict[cardnr] #make sure to add the last one to the Dict
-        
-    score = 0
-    for k,v in cardCounterDict.items():
-        score+= v
-    return score
+    #Per block, dan alle ranges checken
+    blockNr = 1
+    while blockNr < 8:
+        i = 0
+        while i < len(seedRanges):
+            if seedRanges[i][1] == -1:
+                pass
+            if blockNr == 1:
+                if i == 9:
+                    pass
+            lines = blocks[blockNr].split('\n')
+            for line in lines: 
+                numbers = line.split(' ')
+                if len(numbers) == 3:
+                    #dest, Source, length
+                    dest = int(numbers[0])
+                    src = int(numbers[1])
+                    length = int(numbers[2])
+                    if seedRanges[i][0] >= src+length: #If lower number is over eind of range
+                        #Its outside, do nothing
+                        pass
+                    else:
+                        if seedRanges[i][0] >= src: #if lowest is inside range
+                            if seedRanges[i][1] < src+length: #if highest is inside range
+                                #complete inside, modify range to 
+                                pass
+                                seedRanges[i] =(seedRanges[i][0]+dest-src,seedRanges[i][1]+dest-src)
+                                if seedRanges[i][1] == -1:
+                                    pass
+                                break
+                            else:
+                                #Not completely inside. cut range, and add to seeddRanges
+                                seedRanges.append((src+length,seedRanges[i][1]))
+                                seedRanges[i] =(seedRanges[i][0]+dest-src,src+length-1+dest-src)
+                                if seedRanges[i][1] == -1:
+                                    pass
+                                break
+                        else: #lowest is not inside range
+                            if seedRanges[i][1] <= src: #if under src, then its outside range
+                                #do nothing, the numbers will not change.
+                                pass
+                            else:
+                                if seedRanges[i][1] <= src+length: #but highes is inside
+                                    #cut the range
+                                    seedRanges.append((seedRanges[i][0],src-1))
+                                    seedRanges[i] =(dest,seedRanges[i][1]+dest-src)
+                                    if seedRanges[i][1] == -1:
+                                        pass
+                                    break
+            i += 1
+        blockNr += 1
+
+    lowest = 1e10
+    for _min,_max in seedRanges:
+        if _min < lowest:
+            lowest = _min
+    return lowest
 
 if __name__ == '__main__':
     print(f"part 1: {p1()}")
-    #print(f"part 2: {p2()}")
+    print(f"part 2: {p2()}")
