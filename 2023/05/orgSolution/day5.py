@@ -28,7 +28,7 @@ def p1():
 
 
 def p2(): 
-    with open("2023/05/inputs/input.txt") as f:
+    with open("2023/05/inputs/medium.txt") as f:
         blocks = f.read().split('\n\n')
     seedRangeLineElements = blocks[0].split(": ")[1].split(' ')
     i = 0
@@ -43,6 +43,7 @@ def p2():
     #Per block, dan alle ranges checken
     blockNr = 1
     while blockNr < 8:
+        print(f"Start block: {blockNr}")
         i = 0
         while i < len(seedRanges):
             if seedRanges[i][1] == -1:
