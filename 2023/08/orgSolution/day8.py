@@ -1,6 +1,5 @@
 from time import time
-from collections import defaultdict, deque
-
+from math import lcm
 
 def p1():
     with open("2023/08/inputs/input.txt") as f:
@@ -44,27 +43,22 @@ def p2():
         puzzleMap[source] = (left,right)
         if source[2] == 'A':
             currentPositions.append(source) # fill with startpositions
-    
-
-    stepCount = 0
-    allEndwithZ = False
-    while not allEndwithZ:
-        for step in steps:
-            for i in range(0,len(currentPositions)):
+    commonStepCount = 0
+    stepCounts = []
+    for i in range(0,len(currentPositions)):
+        currentPos = currentPositions[i]
+        stepCount = 0
+        while currentPos[2] != 'Z':
+            for step in steps:
                 if step == 'L':
-                    currentPositions[i] = puzzleMap[currentPositions[i]][0]
+                    currentPos = puzzleMap[currentPos][0]
                 else:
-                    currentPositions[i] = puzzleMap[currentPositions[i]][1]
-            stepCount += 1
-            AllZ = True
-            for currentPos in currentPositions:
-                if currentPos[2] != 'Z':
-                    AllZ = False
-                    break # break from check
-            if AllZ:
-                allEndwithZ = AllZ
-                break
-    return stepCount
+                    currentPos = puzzleMap[currentPos][1]
+                stepCount += 1
+                if currentPos[2] == 'Z':
+                    break
+        stepCounts.append(stepCount)
+    return lcm(*stepCounts)
 
 if __name__ == '__main__':
     start_time = int(round(time() * 1000))
