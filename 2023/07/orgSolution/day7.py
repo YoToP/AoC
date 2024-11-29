@@ -21,9 +21,12 @@ def p1():
 
         match len(cardSet):
             case 1: #Five of a kind
-                strength.append((((5,replaceCards(cards)),bid)))
-            case 2: #four of a kind
-                strength.append((((4,replaceCards(cards)),bid)))
+                strength.append((((6,replaceCards(cards)),bid)))
+            case 2: #four of a kind or full house
+                if sorted(a, reverse=True)[0] == 4:
+                    strength.append((((5,replaceCards(cards)),bid)))
+                if sorted(a, reverse=True)[0] == 3:
+                    strength.append((((4,replaceCards(cards)),bid)))                
             case 3: #three of a kind, or two pair
                 if sorted(a, reverse=True)[0] == 2:
                     strength.append((((2,replaceCards(cards)),bid)))
@@ -33,11 +36,11 @@ def p1():
                 strength.append((((1,replaceCards(cards)),bid)))
             case 5: #high cards/ all diferent
                 strength.append((((0,replaceCards(cards)),bid)))
-    sortedList = sorted(strength, key=lambda strength:strength[0])
+    sortedList = sorted(strength, key=lambda b:b[0])
 
     score = 0
-    for i,(_,bid) in enumerate(sortedList):
-        score += (i+1)*int(bid)
+    for i,(_,bid) in enumerate(sortedList,1):
+        score += i*int(bid)
     return score
 
 
