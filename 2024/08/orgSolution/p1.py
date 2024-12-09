@@ -32,12 +32,12 @@ def p1():
 
                 targetI = p1[0]+deltaI
                 targetJ = p1[1]+deltaJ
-                if targetI >= 0 and targetI <= maxI and targetJ >= 0 and targetJ <= maxJ:
+                if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxJ:
                     antinodeDict[(targetI,targetJ)] += 1
                 
                 targetI = p2[0]-deltaI
                 targetJ = p2[1]-deltaJ
-                if targetI >= 0 and targetI <= maxI and targetJ >= 0 and targetJ <= maxJ:
+                if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxJ:
                     antinodeDict[(targetI,targetJ)] += 1
             i += 1
     return len(antinodeDict)
@@ -47,7 +47,7 @@ def p2():
     pairDict = defaultdict(list)
     maxI = 0
     maxJ = 0
-    with open("2024/08/inputs/example.txt") as f:
+    with open("2024/08/inputs/input.txt") as f:
         i = 0
         for line in f.readlines():
             line = line.strip()
@@ -60,7 +60,7 @@ def p2():
                 maxJ = j
             i += 1
             maxI = i
-    pass
+
     for k in pairDict:
         i = 0
         while i < len(pairDict[k])-1:
@@ -74,18 +74,16 @@ def p2():
 
                 targetI = p1[0]+deltaI
                 targetJ = p1[1]+deltaJ
-                if targetI >= 0 and targetI <= maxI and targetJ >= 0 and targetJ <= maxI:
+                if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxI:
                     antinodeDict[(targetI,targetJ)] += 1
                 
                 targetI = p2[0]-deltaI
                 targetJ = p2[1]-deltaJ
-                if targetI >= 0 and targetI <= maxI and targetJ >= 0 and targetJ <= maxI:
+                if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxI:
                     antinodeDict[(targetI,targetJ)] += 1
             i += 1
-    score = 0
-    for k in antinodeDict.keys():
-        score += antinodeDict[k]
-    return score
+
+    return len(antinodeDict)
 
 if __name__ == '__main__':
     start_time = int(round(time() * 1000))
