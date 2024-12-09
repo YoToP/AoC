@@ -66,21 +66,32 @@ def p2():
         while i < len(pairDict[k])-1:
             copyList = pairDict[k][i:len(pairDict[k])]
             p1 = copyList.pop(0) 
+            antinodeDict[(p1[0],p1[1])] += 1 #it turns out that an antinode occurs at any grid position
             while len(copyList) > 0:
                 p2 = copyList.pop(0)
-
+                antinodeDict[(p2[0],p2[1])] += 1 #it turns out that an antinode occurs at any grid position
                 deltaI = p1[0] - p2[0]
                 deltaJ = p1[1] - p2[1]
-
+                
                 targetI = p1[0]+deltaI
                 targetJ = p1[1]+deltaJ
-                if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxI:
-                    antinodeDict[(targetI,targetJ)] += 1
+                while True:
+                    if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxJ:
+                        antinodeDict[(targetI,targetJ)] += 1
+                        targetI = targetI+deltaI
+                        targetJ = targetJ+deltaJ
+                    else:
+                        break
                 
                 targetI = p2[0]-deltaI
                 targetJ = p2[1]-deltaJ
-                if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxI:
-                    antinodeDict[(targetI,targetJ)] += 1
+                while True:
+                    if targetI >= 0 and targetI < maxI and targetJ >= 0 and targetJ < maxJ:
+                        antinodeDict[(targetI,targetJ)] += 1
+                        targetI = targetI-deltaI
+                        targetJ = targetJ-deltaJ
+                    else:
+                        break
             i += 1
 
     return len(antinodeDict)
