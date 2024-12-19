@@ -1,13 +1,22 @@
 from time import time
 import sys
+from dataclasses import dataclass
 sys.setrecursionlimit(10**6)
+
+@dataclass
+class Position:
+    i: int
+    j: int
+    def __hash__(self):
+        return hash((self.i,self.j))
+
 matrix = []
 scoreList = []
 shortesVisitList = dict()
 P2lowestScore = 1000000000
 P2PositionList = set()
 
-def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:set,direction:str,score:int,visitedPlaces: list):
+def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direction:str,score:int,visitedPlaces: list):
     if currentPosition in shortesVisitList.keys(): #If we arrive at a crossroad that another route has found in lower score, then skip this branch
         if score > shortesVisitList[currentPosition]:
             return
@@ -16,8 +25,8 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:set,direction:s
         return
     _score = 0
     _currentPosition = currentPosition
-    nextI = _currentPosition[0]
-    nextJ = _currentPosition[1]
+    nextI = currentPosition.i
+    nextJ = currentPosition.j
     atCrossroad = False
     while not atCrossroad: #follow route until blocked or end has been found
         availableRoutes = [] #Every step check if we are at a crossroad/turn and add them in list
@@ -155,7 +164,7 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:set,direction:s
             visitedPlaces.append(_currentPosition)
     if _currentPosition in visitedCrossroads:
         return #we have arrived at a crossroad, we already visited
-    #shortesVisitList[currentPosition] = score #add starting Cross now, because now we know that its on the path
+    shortesVisitList[currentPosition] = score #add starting Cross now, because now we know that its on the path
     visitedCrossroads.append(_currentPosition)
     for route in availableRoutes:
         _interScore = _score + score
@@ -163,16 +172,16 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:set,direction:s
             _interScore += 1000
         if currentPosition == (8,0):
             pass
-        findCrossPointOrEnd(visitedCrossroads.copy(),_currentPosition,route,_interScore,visitedPlaces.copy())
+        findCrossPointOrEnd(visitedCrossroads.copy(),Position(_currentPosition[0],_currentPosition[1]),route,_interScore,visitedPlaces.copy())
     return
 
 def p1():
-    startPos = (0,0)
+    startPos = Position(0,0)
     with open("2024/16/inputs/input.txt") as f:
         i = 0
         for line in f.read().split('\n'):
             if 'S' in line:
-                startPos = (i,line.find('S')-1)
+                startPos = Position(i,line.find('S')-1)
             matrix.append(list(line))
             i += 1
     _list = []
