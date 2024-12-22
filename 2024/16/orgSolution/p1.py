@@ -19,11 +19,11 @@ P2PositionList = set()
 def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direction:str,score:int,visitedPlaces: list):
     if currentPosition in shortesVisitList.keys(): #If we arrive at a crossroad that another route has found in lower score, then skip this branch
         if score > shortesVisitList[currentPosition]:
+            print(f"{score}>{shortesVisitList[currentPosition]}, {visitedCrossroads}")
             return
     global P2lowestScore, P2PositionList
     if score > P2lowestScore:
         return
-    _score = 0
     _currentPosition = currentPosition
     nextI = currentPosition.i
     nextJ = currentPosition.j
@@ -42,22 +42,22 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direct
                 if not atCrossroad:
                     return #deadend
             elif matrix[nextI][nextJ+1] == 'E': #check in same direction if END
-                _score += 1
-                scoreList.append(score+_score)
+                score += 1
+                scoreList.append(score)
                 visitedPlaces.append((nextI,nextJ)) # this one
                 visitedPlaces.append((nextI,nextJ+1)) # and next
-                if (score+_score) < P2lowestScore:
-                    P2lowestScore = score+_score
+                if (score) < P2lowestScore:
+                    P2lowestScore = score
                     P2PositionList.clear()
                     [P2PositionList.add(e) for e in visitedPlaces]
-                elif (score+_score) == P2lowestScore:
+                elif (score) == P2lowestScore:
                     [P2PositionList.add(e) for e in visitedPlaces]
                 #print(f"{score+_score}: {visitPlaces}")
                 return #Found the end, stop branch
             else:
                 if atCrossroad:
                     availableRoutes.append('>')
-            _score += 1
+            score += 1
             _currentPosition = (nextI,nextJ)
             visitedPlaces.append(_currentPosition)
         elif direction == 'v':
@@ -75,23 +75,22 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direct
                 if not atCrossroad:
                     return #deadend
             elif matrix[nextI+1][nextJ] == 'E':
-                _score += 1
-                scoreList.append(score+_score)
+                score += 1
+                scoreList.append(score)
                 visitedPlaces.append((nextI,nextJ)) # this one
                 visitedPlaces.append((nextI+1,nextJ)) # and next
-                if (score+_score) < P2lowestScore:
-                    P2lowestScore = score+_score
+                if (score) < P2lowestScore:
+                    P2lowestScore = score
                     P2PositionList.clear()
                     [P2PositionList.add(e) for e in visitedPlaces]
-                elif (score+_score) == P2lowestScore:
+                elif (score) == P2lowestScore:
                     [P2PositionList.add(e) for e in visitedPlaces]
                 #print(f"{score+_score}: {visitPlaces}")
                 return #Found the end, stop routine
             else:
-                #_score += 1
                 if atCrossroad:
                     availableRoutes.append('v')
-            _score += 1
+            score += 1
             _currentPosition = (nextI,nextJ)
             visitedPlaces.append(_currentPosition)
         elif direction == '<':
@@ -109,15 +108,15 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direct
                 if not atCrossroad:
                     return #deadend
             elif matrix[nextI][nextJ-1] == 'E':
-                _score += 1
+                score += 1
                 visitedPlaces.append((nextI,nextJ)) # this one
                 visitedPlaces.append((nextI,nextJ-1)) # and next
-                scoreList.append(score+_score)
-                if (score+_score) < P2lowestScore:
-                    P2lowestScore = score+_score
+                scoreList.append(score)
+                if score < P2lowestScore:
+                    P2lowestScore = score
                     P2PositionList.clear()
                     [P2PositionList.add(e) for e in visitedPlaces]
-                elif (score+_score) == P2lowestScore:
+                elif score == P2lowestScore:
                     [P2PositionList.add(e) for e in visitedPlaces]
                 #print(f"{score+_score}: {visitPlaces}")
                 return #Found the end, stop routine
@@ -125,7 +124,7 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direct
                 #_score += 1
                 if atCrossroad:
                     availableRoutes.append('<')
-            _score += 1
+            score += 1
             _currentPosition = (nextI,nextJ)
             visitedPlaces.append(_currentPosition)
         elif direction == '^':
@@ -143,23 +142,22 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direct
                 if not atCrossroad:
                     return #deadend
             elif matrix[nextI-1][nextJ] == 'E':
-                _score += 1
-                scoreList.append(score+_score)
+                score += 1
+                scoreList.append(score)
                 visitedPlaces.append((nextI,nextJ)) # this one
                 visitedPlaces.append((nextI-1,nextJ)) # and next
-                if (score+_score) < P2lowestScore:
-                    P2lowestScore = score+_score
+                if score < P2lowestScore:
+                    P2lowestScore = score
                     P2PositionList.clear()
                     [P2PositionList.add(e) for e in visitedPlaces]
-                elif (score+_score) == P2lowestScore:
+                elif score == P2lowestScore:
                     [P2PositionList.add(e) for e in visitedPlaces]
                 #print(f"{score+_score}: {visitPlaces}")
                 return #Found the end, stop routine
             else:
-                #_score += 1
                 if atCrossroad:
                     availableRoutes.append('^')
-            _score += 1
+            score += 1
             _currentPosition = (nextI,nextJ)
             visitedPlaces.append(_currentPosition)
     if _currentPosition in visitedCrossroads:
@@ -167,17 +165,15 @@ def findCrossPointOrEnd(visitedCrossroads: list, currentPosition:Position,direct
     shortesVisitList[currentPosition] = score #add starting Cross now, because now we know that its on the path
     visitedCrossroads.append(_currentPosition)
     for route in availableRoutes:
-        _interScore = _score + score
+        _interScore = score
         if direction != route:
             _interScore += 1000
-        if currentPosition == (8,0):
-            pass
         findCrossPointOrEnd(visitedCrossroads.copy(),Position(_currentPosition[0],_currentPosition[1]),route,_interScore,visitedPlaces.copy())
     return
 
 def p1():
     startPos = Position(0,0)
-    with open("2024/16/inputs/input.txt") as f:
+    with open("2024/16/inputs/fix1.txt") as f:
         i = 0
         for line in f.read().split('\n'):
             if 'S' in line:
