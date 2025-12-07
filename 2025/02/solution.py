@@ -11,23 +11,6 @@ def isValidP1(s:str) -> bool:
             return True
     return False
 
-#Add isPrime function from https://www.geeksforgeeks.org/dsa/check-for-prime-number/
-#to check for prime nr because then we do not need to check for all combinations, only the singels.
-def isPrime(n):
-    # Numbers less than or equal to 1 are not prime
-    if n <= 1:
-        return False
-
-    # Check divisibility from 2 to √n using i*i <= n
-    i = 2
-    while i * i <= n:
-        if n % i == 0:
-            return False
-        i += 1
-
-    # If no divisors were found, n is prime
-    return True
-
 def isValidP2(s:str) -> bool:
     stringSize = len(s)
 
