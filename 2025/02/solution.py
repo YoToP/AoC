@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-
 def isValidP1(s:str) -> bool:
     stringSize = len(s)
 
@@ -44,9 +41,6 @@ def puzzle():
             if not isValidP2(str(_nr)):
                 scoreP2 += _nr
     return (scoreP1,scoreP2)
-
-
-
 
 if __name__ == '__main__':
     p1,p2 = puzzle()
