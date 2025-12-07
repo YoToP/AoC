@@ -1,19 +1,18 @@
 from collections import defaultdict
 
-def isValid(s:str) -> bool:
-    stringSize = len(s)
-
-    if stringSize % 2 > 0: #odd values do not need to be checked
-        return True
-    else:
-        x = int(stringSize/2)
-        if s[:x] == s[x:stringSize]:
-            return False
-        else:
-            return True
-    return False
-
 def p1():
+    def isValid(s:str) -> bool:
+        stringSize = len(s)
+
+        if stringSize % 2 > 0: #odd values do not need to be checked
+            return True
+        else:
+            x = int(stringSize/2)
+            if s[:x] == s[x:stringSize]:
+                return False
+            else:
+                return True
+        return False
     ranges = []
     with open("2025/02/input.txt") as f:
         ranges = f.readline().strip().split(",")
