@@ -38,10 +38,8 @@ def p2(banks = []):
                     break
             highestNrList.append(high)
             x -= 1
-        aux = 0
         for y in range(0,len(highestNrList)):
-            aux += highestNrList.pop()*pow(10,y)
-        score += aux
+            score += highestNrList.pop()*pow(10,y)
     return score
 
 if __name__ == '__main__':
