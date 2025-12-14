@@ -1,7 +1,6 @@
 from time import time
 
 def p1(matrix = []):
-    debugList = []
     def hasRoll(x,y) -> int:
         
         if x < 0:               #check above OOB(Out of Bounds)
@@ -17,10 +16,8 @@ def p1(matrix = []):
         else:
             return 0
     score = 0
-    maxI = len(matrix)
-    maxJ = len(matrix[0])
-    for i in range(0,maxI):
-        for j in range(0,maxJ):
+    for i in range(0,len(matrix)):
+        for j in range(0,len(matrix[0])):
             amountAdjecentRolls = 0
             if matrix[i][j] == '@':
                 #above
@@ -37,7 +34,6 @@ def p1(matrix = []):
                 amountAdjecentRolls += hasRoll(i+1,j+1)
                 if amountAdjecentRolls < 4:
                     score += 1
-                    debugList.append((i,j))
     return score
 
 def p2(banks = []):
