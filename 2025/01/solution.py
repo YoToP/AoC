@@ -22,25 +22,32 @@ def p1(steps = []):
 def p2(steps = []):
     dial = 50
     amountZero = 0
-    startAtZero = False
     for step in steps:
+        startAtZero = False
+        if dial == 0:
+            startAtZero = True
         if step[0] == 'L':
             dial -= int(step.replace('L',''))
         elif step[0] == 'R':
             dial += int(step.replace('R',''))
-        while dial < 0:
-            dial += 100
-            amountZero += 1
-        while dial > 100:
-            dial -= 100
-            amountZero += 1            
-        if dial == 0:
+        if dial < 0:
+            if startAtZero:
+                amountZero -= 1
+                startAtZero = False
+            while dial < 0:
+                dial += 100
+                amountZero += 1
+        elif dial > 99:
+            while dial > 99:
+                dial -= 100
+                amountZero += 1
+        elif dial == 0:
             amountZero += 1
     return amountZero
 
 if __name__ == '__main__':
     steps = []
-    with open("2025/01/example.txt") as f:
+    with open("2025/01/input.txt") as f:
         steps = f.read().split(f"{f.newlines}")
     start_time = int(round(time() * 1000))
     print('part 1:', p1(steps.copy()))
