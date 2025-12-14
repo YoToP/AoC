@@ -35,9 +35,53 @@ def p1(matrix = []):
                     score += 1
     return score
 
-def p2(banks = []):
+def p2(stringmatrix = []):
+    #we need to be able to modify the matrix
+    matrix = []
+    for string in stringmatrix:
+        charArray = []
+        for char in string:
+            charArray.append(char)
+        matrix.append(charArray)
+    
+    def hasRoll(x,y) -> int:
+        if x < 0:               #check above OOB(Out of Bounds)
+            return 0
+        if x >= len(matrix):    #check right OOB(Out of Bounds)
+            return 0
+        if y < 0:               #check left OOB(Out of Bounds)
+            return 0
+        if y >= len(matrix[0]): #check below OOB(Out of Bounds)
+            return 0
+        if matrix[x][y] == '@':
+            return 1
+        else:
+            return 0
+    
     score = 0
-
+    while True:
+        oldScore = score
+        for i in range(0,len(matrix)):
+            for j in range(0,len(matrix[0])):
+                amountAdjecentRolls = 0
+                if matrix[i][j] == '@':
+                    #above
+                    amountAdjecentRolls += hasRoll(i-1,j-1)
+                    amountAdjecentRolls += hasRoll(i-1,j)
+                    amountAdjecentRolls += hasRoll(i-1,j+1)
+                    #in line
+                    amountAdjecentRolls += hasRoll(i,j-1)
+                    #amountAdjecentRolls += hasRoll(i,j)
+                    amountAdjecentRolls += hasRoll(i,j+1)
+                    #below
+                    amountAdjecentRolls += hasRoll(i+1,j-1)
+                    amountAdjecentRolls += hasRoll(i+1,j)
+                    amountAdjecentRolls += hasRoll(i+1,j+1)
+                    if amountAdjecentRolls < 4:
+                        score += 1
+                        matrix[i][j] = '.'
+        if oldScore == score:
+            break
     return score
 
 if __name__ == '__main__':
