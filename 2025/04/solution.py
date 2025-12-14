@@ -2,7 +2,6 @@ from time import time
 
 def p1(matrix = []):
     def hasRoll(x,y) -> int:
-        
         if x < 0:               #check above OOB(Out of Bounds)
             return 0
         if x >= len(matrix):    #check right OOB(Out of Bounds)
