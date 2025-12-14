@@ -1,5 +1,4 @@
 from time import time
-from math import floor
 
 def p1(banks = []):
     score = 0
@@ -24,7 +23,25 @@ def p1(banks = []):
 
 def p2(banks = []):
     score = 0
-    
+    for i in range(0,len(banks)):
+        highestNrList = []
+        x = 12
+        start = 0
+        while x > 0:
+            end = len(banks[i])-x+1
+            high = 0
+            for j in range(start,end):
+                if int(banks[i][j]) > high:
+                    high = int(banks[i][j])
+                    start = j + 1
+                if high == 9:
+                    break
+            highestNrList.append(high)
+            x -= 1
+        aux = 0
+        for y in range(0,len(highestNrList)):
+            aux += highestNrList.pop()*pow(10,y)
+        score += aux
     return score
 
 if __name__ == '__main__':
