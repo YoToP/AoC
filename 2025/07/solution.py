@@ -1,4 +1,6 @@
 from time import time
+from collections import defaultdict
+import copy
 
 def p1(matrix = []):
     score = 0
@@ -21,8 +23,32 @@ def p1(matrix = []):
     return score
 
 def p2(matrix = []):
-    
-    return 0
+    score = 0
+    startingPos = 0
+    nodeDict = defaultdict(int)
+    for j in range(len(matrix[0])):
+        if matrix[0][j] == 'S':
+            startingPos = j
+    matrix[1][startingPos] = '|'
+    nodeDict[(1,startingPos)] = 1
+    for i in range(2,len(matrix)):
+        for j in range(0,len(matrix[i])):
+            if matrix[i-1][j] == '|':
+                if matrix[i][j] == '.' or matrix[i][j] == '|':
+                    matrix[i][j] = '|'
+                    nodeDict[(i,j)] += nodeDict[(i-1,j)]
+                elif matrix[i][j] == '^':
+                    if j > 0:
+                        matrix[i][j-1] = '|'
+                        nodeDict[(i,j-1)] += nodeDict[(i-1,j)]
+                    if j < (len(matrix[i])-1):
+                        matrix[i][j+1] = '|'
+                        nodeDict[(i,j+1)] += nodeDict[(i-1,j)]
+    lastrow = len(matrix)-1
+    for k,v in nodeDict.items():
+        if k[0] == lastrow:
+            score += v
+    return score
 
 if __name__ == '__main__':
     stringmatrix = []
@@ -35,10 +61,10 @@ if __name__ == '__main__':
             charArray.append(char)
         matrix.append(charArray)
     start_time = int(round(time() * 1000))
-    print('part 1:', p1(matrix.copy()))
+    print('part 1:', p1(copy.deepcopy(matrix)))
     print("### p1 run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
     start_time = int(round(time() * 1000))
-    print('part 2:', p2(matrix.copy()))
+    print('part 2:', p2(copy.deepcopy(matrix)))
     print("### p2 run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
