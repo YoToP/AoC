@@ -15,10 +15,13 @@ def p1(ranges = [],idList = []):
 
     return score
 
-def p2(ranges = [],idList = []):
-    score = 0
-
-    return score
+def p2(ranges = []):
+    ids = set()
+    for _r in ranges:
+        _s,_e = _r.split("-")
+        for i in range(int(_s),int(_e)+1):
+            ids.add(i)
+    return len(ids)
 
 if __name__ == '__main__':
     with open("2025/05/input.txt") as f:
@@ -30,6 +33,6 @@ if __name__ == '__main__':
     print("### p1 run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
     start_time = int(round(time() * 1000))
-    print('part 2:', p2(ranges,idList))
+    print('part 2:', p2(ranges))
     print("### p2 run time is %s miliseconds" %
           (int(round(time() * 1000)) - start_time))
