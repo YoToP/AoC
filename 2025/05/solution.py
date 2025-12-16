@@ -1,5 +1,4 @@
 from time import time
-import copy
 
 def p1(ranges = [],idList = []):
     RangeList = []
@@ -12,7 +11,6 @@ def p1(ranges = [],idList = []):
             if int(_id) in _r:
                 score +=1
                 break
-
     return score
 
 def p2(ranges = []):
