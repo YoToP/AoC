@@ -31,8 +31,38 @@ def p1(lines = []):
     return score
 
 def p2(lines = []):
+    lastLinePos = len(lines)-1
+    endPos = len(lines[0])
+    startPos = endPos-1
+    score = 0
+    #find sign
+    sign = ''
+    while startPos >= 0:
+        test = lines[lastLinePos][startPos]
+        if lines[lastLinePos][startPos] == '+':
+            sign = '+'
+        elif lines[lastLinePos][startPos] == '*':
+            sign = '*'
+        else:
+            startPos -= 1
+            continue
+        if sign == '+':
+            partTotal = 0
+        if sign == '*':
+            partTotal = 1
 
-    return 0
+        for j in range(endPos-1,startPos-1,-1):
+            columnNr = ''
+            for i in range(len(lines)-1):
+                columnNr += lines[i][j]
+            if sign == '+':
+                partTotal += int(columnNr)
+            if sign == '*':
+                partTotal *= int(columnNr)    
+        score += partTotal
+        endPos = startPos-1
+        startPos=endPos-1
+    return score
 
 if __name__ == '__main__':
     with open("2025/06/input.txt") as f:
